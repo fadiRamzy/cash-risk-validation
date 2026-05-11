@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>محرك البحث الائتماني المصري | أكواد الاستعلام 2025</title>
+  <meta name="description" content="بحث متقدم في أكواد الاستعلام الائتماني للبنوك والمؤسسات المالية المصرية" />
+
+  <!-- Google Fonts: Tajawal + IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+
+  <!-- Fuse.js for fuzzy search -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
+
+  <style>
+    /* ========================================
+       CSS VARIABLES & RESET
+    ======================================== */
+    :root {
+      --bg-primary: #080c14;
+      --bg-secondary: #0d1520;
+      --bg-card: #111927;
+      --bg-card-hover: #16202e;
+      --bg-input: #0d1b2a;
+      --border: #1e2d3d;
+      --border-bright: #2a4060;
+      --text-primary: #e8f0fe;
+      --text-secondary: #8aa3bf;
+      --text-muted: #4a6580;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59,130,246,0.15);
+      --accent-2: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gold: #f59e0b;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 40px rgba(59,130,246,0.08);
+      --font-main: 'Tajawal', sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      direction: rtl;
+      overflow-x: hidden;
+    }
+
+    /* Background grid pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ========================================
+       HEADER
+    ======================================== */
+    header {
+      position: relative;
+      z-index: 10;
+      padding: 60px 24px 40px;
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 70%);
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 100px;
+      padding: 6px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+
+    .logo-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-secondary);
+      font-weight: 400;
+      max-width: 500px;
+      margin: 0 auto 16px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .stat-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .stat-chip strong {
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    /* ========================================
+       SEARCH SECTION
+    ======================================== */
+    .search-section {
+      position: relative;
+      z-index: 10;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+    }
+
+    .search-wrapper {
+      position: relative;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--bg-input);
+      border: 1.5px solid var(--border-bright);
+      border-radius: var(--radius-lg);
+      padding: 6px 6px 6px 16px;
+      transition: var(--transition);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .search-box:focus-within {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow), var(--shadow-glow);
+    }
+
+    .search-icon {
+      color: var(--text-muted);
+      font-size: 20px;
+      flex-shrink: 0;
+      margin-left: 12px;
+    }
+
+    #searchInput {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      font-size: 18px;
+      font-weight: 500;
+      padding: 12px 0;
+      caret-color: var(--accent);
+      direction: rtl;
+    }
+
+    #searchInput::placeholder {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .btn-clear {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 18px;
+      transition: var(--transition);
+      display: none;
+    }
+
+    .btn-clear:hover { color: var(--text-primary); background: rgba(255,255,255,0.06); }
+    .btn-clear.visible { display: flex; align-items: center; }
+
+    .btn-search {
+      background: linear-gradient(135deg, var(--accent), #2563eb);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-family: var(--font-main);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-search:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(59,130,246,0.4);
+    }
+
+    /* Autocomplete dropdown */
+    .autocomplete-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0; right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      z-index: 100;
+      display: none;
+    }
+
+    .autocomplete-dropdown.open { display: block; }
+
+    .autocomplete-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:hover, .autocomplete-item.active { background: rgba(59,130,246,0.1); }
+
+    .autocomplete-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .autocomplete-code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .autocomplete-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       FILTER BAR
+    ======================================== */
+    .filter-bar {
+      position: relative;
+      z-index: 9;
+      max-width: 760px;
+      margin: 0 auto 8px;
+      padding: 0 24px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      font-family: var(--font-main);
+    }
+
+    .chip:hover { border-color: var(--accent); color: var(--text-primary); }
+    .chip.active { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+    /* ========================================
+       RECENT SEARCHES
+    ======================================== */
+    .recent-section {
+      position: relative;
+      z-index: 9;
+      max-width: 760px;
+      margin: 0 auto 24px;
+      padding: 0 24px;
+      display: none;
+    }
+
+    .recent-section.visible { display: block; }
+
+    .recent-title {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .recent-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .recent-chip {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .recent-chip:hover { background: rgba(59,130,246,0.1); border-color: var(--accent); color: var(--text-primary); }
+
+    .btn-clear-recent {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: var(--transition);
+      margin-right: 8px;
+    }
+
+    .btn-clear-recent:hover { color: var(--danger); border-color: var(--danger); }
+
+    /* ========================================
+       RESULTS SECTION
+    ======================================== */
+    .results-section {
+      position: relative;
+      z-index: 9;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 16px 20px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .results-count {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .results-count .num {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    .results-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-export {
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: var(--success);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-export:hover { background: rgba(16,185,129,0.2); }
+
+    .sort-select {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: var(--font-main);
+      cursor: pointer;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .sort-select:hover { border-color: var(--accent); }
+
+    /* ========================================
+       CARDS GRID
+    ======================================== */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .result-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-bright);
+      box-shadow: var(--shadow-card);
+      transform: translateY(-2px);
+    }
+
+    /* Colored left border accent */
+    .result-card::before {
+      content: '';
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--card-accent, var(--accent));
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+
+    .card-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .card-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      border: 1px solid;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-code-block {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .code-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .code-value {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .code-value mark {
+      background: rgba(59,130,246,0.3);
+      color: #93c5fd;
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+
+    .card-name mark {
+      background: rgba(59,130,246,0.2);
+      color: #93c5fd;
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+
+    .card-source {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-copy {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: var(--font-main);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .btn-copy:hover { background: rgba(59,130,246,0.1); border-color: var(--accent); color: var(--text-primary); }
+    .btn-copy.copied { background: rgba(16,185,129,0.1); border-color: var(--success); color: var(--success); }
+
+    /* ========================================
+       EMPTY STATE
+    ======================================== */
+    .empty-state {
+      text-align: center;
+      padding: 80px 24px;
+      display: none;
+    }
+
+    .empty-state.visible { display: block; }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .empty-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .empty-desc {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       WELCOME STATE
+    ======================================== */
+    .welcome-state {
+      text-align: center;
+      padding: 40px 24px 60px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .welcome-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .welcome-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px 16px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .welcome-card:hover {
+      border-color: var(--border-bright);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .welcome-card-icon { font-size: 28px; margin-bottom: 10px; }
+    .welcome-card-name { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .welcome-card-count { font-size: 12px; color: var(--text-muted); }
+
+    /* ========================================
+       LOADING
+    ======================================== */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,12,20,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading-overlay.visible { display: flex; }
+
+    .spinner {
+      width: 48px; height: 48px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ========================================
+       FOOTER
+    ======================================== */
+    footer {
+      position: relative;
+      z-index: 9;
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    footer strong { color: var(--text-secondary); }
+
+    /* ========================================
+       SCORE TABLE (bonus)
+    ======================================== */
+    .score-section {
+      max-width: 700px;
+      margin: 0 auto 40px;
+      padding: 0 24px;
+    }
+
+    .score-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) { .score-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .score-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .score-range {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .score-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 700;
+    }
+
+    .score-risk {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ========================================
+       RESPONSIVE
+    ======================================== */
+    @media (max-width: 640px) {
+      header { padding: 40px 16px 24px; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .btn-search span { display: none; }
+      .results-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ========================================
+       TOAST NOTIFICATION
+    ======================================== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg-card);
+      border: 1px solid var(--success);
+      border-radius: 100px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--success);
+      z-index: 9999;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ========================================
+       SCROLLBAR
+    ======================================== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-badge">محرك البحث الائتماني 2025</div>
+    <h1>أكواد الاستعلام <span>الائتماني المصري</span></h1>
+    <p class="subtitle">بحث فوري وذكي في جميع أكواد البنوك والمؤسسات المالية المصرية</p>
+    <div class="stats-row">
+      <div class="stat-chip">🏦 <strong id="totalCount">192</strong> مؤسسة</div>
+      <div class="stat-chip">📂 <strong>14</strong> تصنيف</div>
+      <div class="stat-chip">⚡ بحث فوري</div>
+      <div class="stat-chip">🔒 بدون إنترنت</div>
+    </div>
+  </header>
+
+  <!-- Search Section -->
+  <div class="search-section">
+    <div class="search-wrapper">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="ابحث باسم البنك، الشركة، أو الكود..."
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <button class="btn-clear" id="btnClear" title="مسح">✕</button>
+        <button class="btn-search" id="btnSearch">
+          <span>بحث</span>
+        </button>
+      </div>
+      <div class="autocomplete-dropdown" id="autocompleteDropdown"></div>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <span class="filter-label">تصفية:</span>
+    <div class="filter-chips" id="filterChips">
+      <button class="chip active" data-filter="all">الكل</button>
+      <button class="chip" data-filter="بنك عام">بنوك عامة</button>
+      <button class="chip" data-filter="بنك تجاري">بنوك تجارية</button>
+      <button class="chip" data-filter="بنك استثماري">بنوك استثمارية</button>
+      <button class="chip" data-filter="بنك أجنبي">بنوك أجنبية</button>
+      <button class="chip" data-filter="بنك متخصص">بنوك متخصصة</button>
+      <button class="chip" data-filter="تمويل متناهي الصغر">تمويل صغير</button>
+      <button class="chip" data-filter="تمويل عقاري">عقاري</button>
+      <button class="chip" data-filter="تأجير تمويلي">تأجير</button>
+      <button class="chip" data-filter="ائتمان واستهلاك">ائتمان</button>
+      <button class="chip" data-filter="إسكان وتعمير">إسكان</button>
+    </div>
+  </div>
+
+  <!-- Recent Searches -->
+  <div class="recent-section" id="recentSection">
+    <div class="recent-title">
+      🕐 عمليات البحث الأخيرة
+      <button class="btn-clear-recent" id="btnClearRecent">مسح الكل</button>
+    </div>
+    <div class="recent-chips" id="recentChips"></div>
+  </div>
+
+  <!-- Results Section -->
+  <div class="results-section">
+    <!-- Results Header -->
+    <div class="results-header" id="resultsHeader" style="display:none">
+      <div class="results-count">
+        نتيجة <span class="num" id="resultsNum">0</span> من أصل <span class="num" id="totalNum">192</span>
+      </div>
+      <div class="results-actions">
+        <select class="sort-select" id="sortSelect">
+          <option value="relevance">ترتيب: الصلة</option>
+          <option value="name">الاسم أ-ي</option>
+          <option value="code">الكود</option>
+          <option value="category">التصنيف</option>
+        </select>
+        <button class="btn-export" id="btnExport">
+          📥 تصدير CSV
+        </button>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="cards-grid" id="cardsGrid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">🔎</div>
+      <div class="empty-title">لا توجد نتائج</div>
+      <div class="empty-desc">جرّب البحث بكلمات مختلفة أو تحقق من الإملاء</div>
+    </div>
+
+    <!-- Welcome State -->
+    <div class="welcome-state" id="welcomeState">
+      <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 4px;">تصفح حسب التصنيف</p>
+      <div class="welcome-grid" id="welcomeGrid"></div>
+    </div>
+  </div>
+
+  <!-- Credit Score Table -->
+  <div class="score-section">
+    <div class="score-title">📊 جدول تقييم الائتمان</div>
+    <div class="score-grid">
+      <div class="score-card">
+        <div class="score-range" style="color:#10b981">850 - 751</div>
+        <div class="score-label" style="color:#10b981">ممتاز</div>
+        <div class="score-risk">نسبة مخاطر: 2%</div>
+      </div>
+      <div class="score-card">
+        <div class="score-range" style="color:#3b82f6">750 - 701</div>
+        <div class="score-label" style="color:#3b82f6">جيد جداً</div>
+        <div class="score-risk">نسبة مخاطر: 208%</div>
+      </div>
+      <div class="score-card">
+        <div class="score-range" style="color:#06b6d4">700 - 626</div>
+        <div class="score-label" style="color:#06b6d4">مرضي</div>
+        <div class="score-risk">نسبة مخاطر: 5.1%</div>
+      </div>
+      <div class="score-card">
+        <div class="score-range" style="color:#f59e0b">625 - 521</div>
+        <div class="score-label" style="color:#f59e0b">غير مرضي</div>
+        <div class="score-risk">نسبة مخاطر: 25.8%</div>
+      </div>
+      <div class="score-card">
+        <div class="score-range" style="color:#ef4444">520 - 400</div>
+        <div class="score-label" style="color:#ef4444">مخاطر مرتفعة</div>
+        <div class="score-risk">نسبة مخاطر: 31.9%</div>
+      </div>
+      <div class="score-card">
+        <div class="score-range" style="color:#9f1239">399 - 300</div>
+        <div class="score-label" style="color:#9f1239">متعثر</div>
+        <div class="score-risk">نسبة مخاطر: 74.5%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>إعداد / <strong>فادي عادل</strong> — أكواد الاستعلام الائتماني المصري 2025</p>
+    <p style="margin-top: 6px; font-size: 11px;">كاش للتمويل متناهي الصغر | بني سويف</p>
+  </footer>
+
+  <!-- Data Script -->
+  <script src="data/codes.js"></script>
+
+  <!-- Main Script -->
+  <script>
+  // ====================================================
+  // STATE
+  // ====================================================
+  let allData = CREDIT_DATA;
+  let activeFilter = 'all';
+  let currentResults = [];
+  let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+  let fuseInstance = null;
+  let autocompleteTimeout = null;
+
+  // ====================================================
+  // ARABIC NORMALIZATION
+  // ====================================================
+  function normalizeArabic(text) {
+    if (!text) return '';
+    return text
+      .toLowerCase()
+      // Remove diacritics (tashkeel)
+      .replace(/[\u064B-\u065F\u0670]/g, '')
+      // Normalize Alef variants → ا
+      .replace(/[أإآاٱ]/g, 'ا')
+      // Ta marbuta → ه
+      .replace(/ة/g, 'ه')
+      // Alef maqsura → ي
+      .replace(/ى/g, 'ي')
+      // Normalize waw with hamza
+      .replace(/ؤ/g, 'و')
+      // Ya with hamza
+      .replace(/ئ/g, 'ي')
+      // Remove extra spaces
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  // ====================================================
+  // INIT FUSE.JS
+  // ====================================================
+  function initFuse() {
+    // Create normalized copies for searching
+    const searchData = allData.map(item => ({
+      ...item,
+      _normName: normalizeArabic(item.name),
+      _normCode: item.code.toLowerCase(),
+      _normCat: normalizeArabic(item.category),
+    }));
+
+    fuseInstance = new Fuse(searchData, {
+      keys: [
+        { name: '_normName', weight: 0.5 },
+        { name: 'name', weight: 0.3 },
+        { name: '_normCode', weight: 0.15 },
+        { name: 'code', weight: 0.15 },
+        { name: '_normCat', weight: 0.05 },
+      ],
+      threshold: 0.4,
+      includeScore: true,
+      includeMatches: true,
+      minMatchCharLength: 1,
+      useExtendedSearch: false,
+      getFn: (obj, path) => {
+        const val = Fuse.config.getFn(obj, path);
+        if (typeof val === 'string') return normalizeArabic(val);
+        return val;
+      }
+    });
+
+    document.getElementById('totalCount').textContent = allData.length;
+    document.getElementById('totalNum').textContent = allData.length;
+  }
+
+  // ====================================================
+  // SEARCH
+  // ====================================================
+  function performSearch(query) {
+    const rawQuery = query.trim();
+
+    if (!rawQuery) {
+      showWelcome();
+      return;
+    }
+
+    const normQuery = normalizeArabic(rawQuery);
+
+    // Save to recent
+    saveRecent(rawQuery);
+
+    // Filter by category first
+    let pool = activeFilter === 'all' ? allData : allData.filter(d => d.category === activeFilter);
+
+    let results;
+
+    // Exact / partial match first (faster & more accurate)
+    const exactMatches = pool.filter(item => {
+      const nm = normalizeArabic(item.name);
+      const code = item.code.toLowerCase();
+      const cat = normalizeArabic(item.category);
+      const nq = normQuery;
+      return nm.includes(nq) || code.includes(rawQuery.toLowerCase()) || cat.includes(nq);
+    });
+
+    if (exactMatches.length > 0) {
+      results = exactMatches;
+    } else {
+      // Fuzzy fallback
+      const fusePool = new Fuse(pool.map(item => ({
+        ...item,
+        _normName: normalizeArabic(item.name),
+        _normCode: item.code.toLowerCase(),
+        _normCat: normalizeArabic(item.category),
+      })), {
+        keys: ['_normName', '_normCode', '_normCat'],
+        threshold: 0.5,
+        includeScore: true,
+      });
+      results = fusePool.search(normQuery).map(r => r.item);
+    }
+
+    // Sort
+    applySort(results, rawQuery);
+  }
+
+  function applySort(results, query) {
+    const sort = document.getElementById('sortSelect').value;
+    let sorted = [...results];
+
+    if (sort === 'name') sorted.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+    else if (sort === 'code') sorted.sort((a, b) => a.code.localeCompare(b.code));
+    else if (sort === 'category') sorted.sort((a, b) => a.category.localeCompare(b.category, 'ar'));
+
+    currentResults = sorted;
+    renderResults(sorted, query);
+  }
+
+  // ====================================================
+  // RENDER
+  // ====================================================
+  function renderResults(results, query) {
+    const grid = document.getElementById('cardsGrid');
+    const empty = document.getElementById('emptyState');
+    const welcome = document.getElementById('welcomeState');
+    const header = document.getElementById('resultsHeader');
+
+    welcome.style.display = 'none';
+    grid.innerHTML = '';
+
+    if (results.length === 0) {
+      empty.classList.add('visible');
+      header.style.display = 'none';
+      return;
+    }
+
+    empty.classList.remove('visible');
+    header.style.display = 'flex';
+    document.getElementById('resultsNum').textContent = results.length;
+
+    results.forEach((item, i) => {
+      const card = createCard(item, query, i);
+      grid.appendChild(card);
+    });
+  }
+
+  function highlightText(text, query) {
+    if (!query) return escapeHtml(text);
+    const norm = normalizeArabic(query);
+    const normText = normalizeArabic(text);
+    const idx = normText.indexOf(norm);
+    if (idx === -1) return escapeHtml(text);
+    const before = text.slice(0, idx);
+    const match = text.slice(idx, idx + norm.length);
+    const after = text.slice(idx + norm.length);
+    return `${escapeHtml(before)}<mark>${escapeHtml(match)}</mark>${escapeHtml(after)}`;
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function createCard(item, query, index) {
+    const colors = CATEGORY_COLORS[item.category] || { bg: '#111927', accent: '#3b82f6', icon: '🏢' };
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.style.setProperty('--card-accent', colors.accent);
+    card.style.animationDelay = `${Math.min(index * 40, 400)}ms`;
+
+    const catColor = colors.accent;
+    const catBg = `${colors.accent}20`;
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-icon">${colors.icon}</div>
+        <div class="card-meta">
+          <div class="card-name">${highlightText(item.name, query)}</div>
+          <div class="card-category" style="color:${catColor}; background:${catBg}; border-color:${catColor}40">
+            ${item.category}
+          </div>
+        </div>
+      </div>
+      <div class="card-code-block">
+        <span class="code-label">كود الاستعلام</span>
+        <span class="code-value">${highlightCode(item.code, query)}</span>
+      </div>
+      <div class="card-source">📄 ${escapeHtml(item.source)}</div>
+      <div class="card-actions">
+        <button class="btn-copy" onclick="copyCode('${item.code}', this)">
+          📋 نسخ الكود
+        </button>
+        <button class="btn-copy" onclick="copyFull('${item.id}', this)">
+          📝 نسخ البيانات
+        </button>
+      </div>
+    `;
+    return card;
+  }
+
+  function highlightCode(code, query) {
+    if (!query) return escapeHtml(code);
+    const lower = code.toLowerCase();
+    const q = query.toLowerCase();
+    const idx = lower.indexOf(q);
+    if (idx === -1) return escapeHtml(code);
+    return escapeHtml(code.slice(0, idx)) + `<mark>${escapeHtml(code.slice(idx, idx + q.length))}</mark>` + escapeHtml(code.slice(idx + q.length));
+  }
+
+  // ====================================================
+  // WELCOME STATE
+  // ====================================================
+  function showWelcome() {
+    document.getElementById('cardsGrid').innerHTML = '';
+    document.getElementById('emptyState').classList.remove('visible');
+    document.getElementById('resultsHeader').style.display = 'none';
+    document.getElementById('welcomeState').style.display = 'block';
+    buildWelcomeGrid();
+  }
+
+  function buildWelcomeGrid() {
+    const grid = document.getElementById('welcomeGrid');
+    grid.innerHTML = '';
+    const cats = {};
+    allData.forEach(item => {
+      if (!cats[item.category]) cats[item.category] = 0;
+      cats[item.category]++;
+    });
+    Object.entries(cats).forEach(([cat, count]) => {
+      const colors = CATEGORY_COLORS[cat] || { icon: '🏢', accent: '#3b82f6' };
+      const div = document.createElement('div');
+      div.className = 'welcome-card';
+      div.style.borderColor = `${colors.accent}40`;
+      div.innerHTML = `
+        <div class="welcome-card-icon">${colors.icon}</div>
+        <div class="welcome-card-name">${cat}</div>
+        <div class="welcome-card-count">${count} مؤسسة</div>
+      `;
+      div.onclick = () => {
+        setFilter(cat);
+        document.getElementById('searchInput').value = '';
+        performSearch('');
+        setTimeout(() => {
+          const pool = allData.filter(d => d.category === cat);
+          currentResults = pool;
+          renderResults(pool, '');
+          document.getElementById('resultsNum').textContent = pool.length;
+          document.getElementById('resultsHeader').style.display = 'flex';
+        }, 0);
+      };
+      grid.appendChild(div);
+    });
+  }
+
+  // ====================================================
+  // FILTER
+  // ====================================================
+  function setFilter(filter) {
+    activeFilter = filter;
+    document.querySelectorAll('.chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.filter === filter);
+    });
+  }
+
+  document.getElementById('filterChips').addEventListener('click', e => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    setFilter(chip.dataset.filter);
+    const q = document.getElementById('searchInput').value;
+    if (q.trim()) performSearch(q);
+    else {
+      const pool = activeFilter === 'all' ? allData : allData.filter(d => d.category === activeFilter);
+      currentResults = pool;
+      if (pool.length < allData.length) {
+        renderResults(pool, '');
+        document.getElementById('resultsHeader').style.display = 'flex';
+        document.getElementById('resultsNum').textContent = pool.length;
+        document.getElementById('welcomeState').style.display = 'none';
+      } else {
+        showWelcome();
+      }
+    }
+  });
+
+  // ====================================================
+  // AUTOCOMPLETE
+  // ====================================================
+  function showAutocomplete(query) {
+    const dropdown = document.getElementById('autocompleteDropdown');
+    if (!query || query.length < 1) { dropdown.classList.remove('open'); return; }
+
+    const norm = normalizeArabic(query);
+    const matches = allData.filter(item =>
+      normalizeArabic(item.name).includes(norm) ||
+      item.code.toLowerCase().includes(query.toLowerCase())
+    ).slice(0, 6);
+
+    if (!matches.length) { dropdown.classList.remove('open'); return; }
+
+    dropdown.innerHTML = matches.map(item => `
+      <div class="autocomplete-item" data-id="${item.id}" onclick="selectAutocomplete(${item.id})">
+        <div class="autocomplete-name">${escapeHtml(item.name)}</div>
+        <div class="autocomplete-code">${escapeHtml(item.code)}</div>
+        <div class="autocomplete-cat">${escapeHtml(item.category)}</div>
+      </div>
+    `).join('');
+
+    dropdown.classList.add('open');
+  }
+
+  function selectAutocomplete(id) {
+    const item = allData.find(d => d.id === id);
+    if (!item) return;
+    document.getElementById('searchInput').value = item.name;
+    document.getElementById('autocompleteDropdown').classList.remove('open');
+    performSearch(item.name);
+  }
+
+  // ====================================================
+  // RECENT SEARCHES
+  // ====================================================
+  function saveRecent(query) {
+    if (!query) return;
+    recentSearches = [query, ...recentSearches.filter(s => s !== query)].slice(0, 8);
+    localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+    renderRecent();
+  }
+
+  function renderRecent() {
+    const section = document.getElementById('recentSection');
+    const chips = document.getElementById('recentChips');
+    if (!recentSearches.length) { section.classList.remove('visible'); return; }
+    section.classList.add('visible');
+    chips.innerHTML = recentSearches.map(s => `
+      <button class="recent-chip" onclick="searchFromRecent('${escapeHtml(s)}')">
+        🕐 ${escapeHtml(s)}
+      </button>
+    `).join('');
+  }
+
+  function searchFromRecent(q) {
+    document.getElementById('searchInput').value = q;
+    performSearch(q);
+    updateClearBtn();
+  }
+
+  document.getElementById('btnClearRecent').onclick = () => {
+    recentSearches = [];
+    localStorage.removeItem('recentSearches');
+    renderRecent();
+  };
+
+  // ====================================================
+  // COPY ACTIONS
+  // ====================================================
+  function copyCode(code, btn) {
+    navigator.clipboard.writeText(code).then(() => {
+      btn.classList.add('copied');
+      btn.textContent = '✓ تم النسخ';
+      showToast(`تم نسخ الكود: ${code}`);
+      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📋 نسخ الكود'; }, 2000);
+    });
+  }
+
+  function copyFull(id, btn) {
+    const item = allData.find(d => d.id === id);
+    if (!item) return;
+    const text = `الاسم: ${item.name}\nالكود: ${item.code}\nالتصنيف: ${item.category}\nالمصدر: ${item.source}`;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.classList.add('copied');
+      btn.textContent = '✓ تم النسخ';
+      showToast('تم نسخ البيانات الكاملة');
+      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = '📝 نسخ البيانات'; }, 2000);
+    });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  // ====================================================
+  // EXPORT CSV
+  // ====================================================
+  document.getElementById('btnExport').onclick = () => {
+    if (!currentResults.length) return;
+    const BOM = '\uFEFF';
+    const header = 'الاسم,الكود,التصنيف,المصدر';
+    const rows = currentResults.map(r =>
+      `"${r.name}","${r.code}","${r.category}","${r.source}"`
+    );
+    const csv = BOM + [header, ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'اكواد_الاستعلام_الائتماني.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`تم تصدير ${currentResults.length} نتيجة`);
+  };
+
+  // ====================================================
+  // SORT
+  // ====================================================
+  document.getElementById('sortSelect').onchange = () => {
+    const q = document.getElementById('searchInput').value;
+    if (currentResults.length) applySort(currentResults, q);
+  };
+
+  // ====================================================
+  // EVENT LISTENERS
+  // ====================================================
+  const input = document.getElementById('searchInput');
+
+  function updateClearBtn() {
+    const btn = document.getElementById('btnClear');
+    if (input.value.trim()) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  }
+
+  input.addEventListener('input', () => {
+    updateClearBtn();
+    clearTimeout(autocompleteTimeout);
+    autocompleteTimeout = setTimeout(() => {
+      showAutocomplete(input.value);
+      if (input.value.trim().length >= 1) performSearch(input.value);
+      else showWelcome();
+    }, 120);
+  });
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      document.getElementById('autocompleteDropdown').classList.remove('open');
+      performSearch(input.value);
+    }
+    if (e.key === 'Escape') {
+      document.getElementById('autocompleteDropdown').classList.remove('open');
+    }
+  });
+
+  document.getElementById('btnSearch').onclick = () => {
+    document.getElementById('autocompleteDropdown').classList.remove('open');
+    performSearch(input.value);
+  };
+
+  document.getElementById('btnClear').onclick = () => {
+    input.value = '';
+    updateClearBtn();
+    document.getElementById('autocompleteDropdown').classList.remove('open');
+    showWelcome();
+    input.focus();
+  };
+
+  // Close autocomplete on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.search-wrapper')) {
+      document.getElementById('autocompleteDropdown').classList.remove('open');
+    }
+  });
+
+  // ====================================================
+  // INIT
+  // ====================================================
+  window.addEventListener('DOMContentLoaded', () => {
+    initFuse();
+    renderRecent();
+    showWelcome();
+  });
+  </script>
+</body>
+</html>
