@@ -7,12 +7,12 @@ export default function Report({ metrics, sheetName }) {
 
   const exportToExcel = () => {
     const dataRows = metrics.branches.map(b => ({
-      'اسم الفرع': b._branch,
-      'حجم المحفظة القائمة (ج.م)': b._portfolio,
-      'رصيد متأخرات PAR (ج.م)': b._par,
-      'نسبة المتأخرات PAR %': b._parPct,
-      'نسبة التحصيل %': b._collectionPct,
-      'عدد العملاء': b._clients,
+      'اسم الفرع': b.branch,
+      'حجم المحفظة القائمة (ج.م)': b.portfolio,
+      'رصيد متأخرات PAR (ج.م)': b.par,
+      'نسبة المتأخرات PAR %': b.parPct,
+      'نسبة التحصيل %': b.collectionPct,
+      'عدد العملاء': b.clients,
       'درجة المخاطرة': b.riskLevel,
       'حجم التأثير المالي': b.impact === 'High' ? 'مرتفع الأثر' : 'اعتيادي',
       'استثناء سياسات': b.policyException ? 'مخالف للمستهدف' : 'مطابق'
@@ -93,12 +93,12 @@ export default function Report({ metrics, sheetName }) {
             <tbody>
               {metrics.branches.map((b, idx) => (
                 <tr key={idx} className={`${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-gray-100`}>
-                  <td className="p-2 border font-semibold">{b._branch}</td>
-                  <td className="p-2 border">{b._portfolio.toLocaleString()}</td>
-                  <td className="p-2 border text-red-600">{b._par.toLocaleString()}</td>
-                  <td className="p-2 border font-medium">{b._parPct.toFixed(2)}%</td>
-                  <td className="p-2 border">{b._collectionPct.toFixed(2)}%</td>
-                  <td className="p-2 border">{b._clients.toLocaleString()}</td>
+                  <td className="p-2 border font-semibold">{b.branch}</td>
+                  <td className="p-2 border">{b.portfolio.toLocaleString()}</td>
+                  <td className="p-2 border text-red-600">{b.par.toLocaleString()}</td>
+                  <td className="p-2 border font-medium">{b.parPct.toFixed(2)}%</td>
+                  <td className="p-2 border">{b.collectionPct.toFixed(2)}%</td>
+                  <td className="p-2 border">{b.clients.toLocaleString()}</td>
                   <td className="p-2 border text-center">
                     <span className={`px-2 py-0.5 rounded text-2xs ${
                       b.riskLevel === 'High' ? 'bg-red-100 text-red-800' :

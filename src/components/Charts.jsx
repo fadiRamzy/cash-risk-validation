@@ -25,11 +25,11 @@ export default function Charts({ metrics, allPeriods }) {
       { id: 'portfolioTrend', type: 'line', data: { labels: allPeriods.map(p => p.name), datasets: [{ label: 'المحفظة', data: allPeriods.map(p => p.metrics?.totalPortfolio) }] }, trend: true },
       { id: 'parTrend', type: 'line', data: { labels: allPeriods.map(p => p.name), datasets: [{ label: 'المتأخرات', data: allPeriods.map(p => p.metrics?.totalPAR) }] }, trend: true },
       { id: 'collTrend', type: 'line', data: { labels: allPeriods.map(p => p.name), datasets: [{ label: 'التحصيل', data: allPeriods.map(p => p.metrics?.portfolioCollection) }] }, trend: true },
-      { id: 'branchPar', type: 'bar', data: { labels: metrics.branches.slice(0, 10).map(b => b.data[0]), datasets: [{ label: 'PAR', data: metrics.branches.slice(0, 10).map(b => b.par) }] } },
-      { id: 'branchColl', type: 'bar', data: { labels: metrics.branches.slice(0, 10).map(b => b.data[0]), datasets: [{ label: 'Collection %', data: metrics.branches.slice(0, 10).map(b => b.collectionPct) }] } },
-      { id: 'topRisk', type: 'bar', data: { labels: metrics.branches.slice(0, 5).map(b => b.data[0]), datasets: [{ label: 'Risk Score', data: metrics.branches.slice(0, 5).map(b => b.parPct) }] } },
-      { id: 'agingDist', type: 'doughnut', data: { labels: ['1-30', '31-60', '61-90', '90+'], datasets: [{ data: Object.values(metrics.agingTotals) }] }, aging: true },
-      { id: 'parConc', type: 'pie', data: { labels: ['Top 3', 'Others'], datasets: [{ data: [metrics.branches.slice(0,3).reduce((s,r)=>s+r.par,0), metrics.totalPAR] }] } },
+      { id: 'branchPar', type: 'bar', data: { labels: metrics.branches.slice(0, 10).map(b => b.branch), datasets: [{ label: 'PAR', data: metrics.branches.slice(0, 10).map(b => b.par) }] } },
+      { id: 'branchColl', type: 'bar', data: { labels: metrics.branches.slice(0, 10).map(b => b.branch), datasets: [{ label: 'Collection %', data: metrics.branches.slice(0, 10).map(b => b.collectionPct) }] } },
+      { id: 'topRisk', type: 'bar', data: { labels: metrics.branches.slice(0, 5).map(b => b.branch), datasets: [{ label: 'Risk Score', data: metrics.branches.slice(0, 5).map(b => b.parPct) }] } },
+      { id: 'agingDist', type: 'doughnut', data: { labels: ['1-30', '31-60', '61-90', '91-120', '120+'], datasets: [{ data: Object.values(metrics.agingTotals) }] }, aging: true },
+      { id: 'parConc', type: 'pie', data: { labels: ['Top 3', 'Others'], datasets: [{ data: (() => { const top3 = metrics.branches.slice(0,3).reduce((s,r)=>s+r.par,0); return [top3, Math.max(metrics.totalPAR - top3, 0)]; })() }] } },
       { id: 'portVsPar', type: 'scatter', data: { datasets: [{ label: 'Portfolio vs PAR', data: metrics.branches.map(b => ({x: b.portfolio, y: b.par})) }] } },
       { id: 'riskDist', type: 'polarArea', data: { labels: ['Low', 'Medium', 'High'], datasets: [{ data: [metrics.riskCounts.Low, metrics.riskCounts.Medium, metrics.riskCounts.High] }] } }
     ];

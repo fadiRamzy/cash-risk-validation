@@ -13,7 +13,7 @@ export function generateAnalysis(metrics) {
     observations.push({
       type: 'risk',
       title: 'تحليل المخاطر المرتفعة',
-      content: `يتركز التعثر في فروع (${top3.map(b => b.data[0]).join('، ')})، مما يتطلب مراجعة دقيقة لمحفظة هذه الفروع.`
+      content: `يتركز التعثر في فروع (${top3.map(b => b.branch).join('، ')})، مما يتطلب مراجعة دقيقة لمحفظة هذه الفروع.`
     });
   }
 
