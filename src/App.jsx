@@ -10,7 +10,6 @@ export default function App() {
   const [data, setData] = useState(null);
   const [periodIdx, setPeriodIdx] = useState(0);
   const [mappingSheet, setMappingSheet] = useState(null);
-  const [mappingSheetIndex, setMappingSheetIndex] = useState(null);
   const [error, setError] = useState(null);
 
   const onUpload = async (e) => {
@@ -24,7 +23,7 @@ export default function App() {
         const met = computeMetrics(val, s.colMap);
         return { ...s, validation: val, metrics: met };
       });
-      
+
       const periods = res.periods.map(p => ({
         ...p,
         metrics: processedSheets[p.sheetIndex]?.metrics
@@ -32,36 +31,35 @@ export default function App() {
 
       setData({ sheets: processedSheets, periods });
 
-      // Check the sheets that actually matter (the detected period sheets, or sheet 0 if none
-      // were detected) rather than always sheet 0 — the first sheet in a real workbook can be
-      // a non-period overview sheet while the real period data lives at other indices.
-      const candidateIndices = periods.length > 0 ? periods.map(p => p.sheetIndex) : [0];
-      const needsMappingIdx = candidateIndices.find(i => processedSheets[i]?.validation.missingFields.length > 0);
-      if (needsMappingIdx !== undefined) {
-        setMappingSheetIndex(needsMappingIdx);
-        setMappingSheet(processedSheets[needsMappingIdx]);
+      // Check all sheets for missing fields and trigger mapping for the first one
+      const firstNeedingMapping = processedSheets.find(s => s.validation.missingFields.length > 0);
+      if (firstNeedingMapping) {
+        setMappingSheet(firstNeedingMapping);
       }
     } catch (err) { setError("فشل في معالجة الملف."); }
   };
 
   const handleMap = (newMap) => {
-    const idx = mappingSheetIndex;
-    const s = data.sheets[idx];
+    const s = mappingSheet;
     const val = validateSheet(s, newMap);
     const met = computeMetrics(val, newMap);
-    const newSheets = [...data.sheets];
-    newSheets[idx] = { ...s, colMap: newMap, validation: val, metrics: met };
-    const newPeriods = data.periods.map(p => p.sheetIndex === idx ? { ...p, metrics: met } : p);
-    setData({ sheets: newSheets, periods: newPeriods });
+    const newData = {...data};
+    const sheetIdx = newData.sheets.findIndex(sh => sh.name === s.name);
+    if (sheetIdx >= 0) {
+      newData.sheets[sheetIdx] = { ...s, colMap: newMap, validation: val, metrics: met };
+      // Also update the period metrics if this sheet is a period
+      const periodIdx = newData.periods.findIndex(p => p.sheetIndex === s.sheetIndex);
+      if (periodIdx >= 0) {
+        newData.periods[periodIdx] = { ...newData.periods[periodIdx], metrics: met };
+      }
+    }
+    setData(newData);
     setMappingSheet(null);
-    setMappingSheetIndex(null);
   };
 
   const current = data?.periods[periodIdx]?.metrics;
   const previous = periodIdx > 0 ? data?.periods[periodIdx - 1]?.metrics : null;
   const comparison = comparePeriods(current, previous);
-  const currentSheetIndex = data?.periods[periodIdx]?.sheetIndex ?? 0;
-  const currentSheet = data?.sheets[currentSheetIndex];
 
   return (
     <div className="min-h-screen bg-gray-50 p-6" dir="rtl">
@@ -77,9 +75,13 @@ export default function App() {
         <div className="space-y-10">
           <div className="flex justify-between bg-white p-4 shadow rounded">
              <div className="text-sm">
-                تم استيراد: {currentSheet.rows.length} صف | 
-                صحيح: {currentSheet.validation.valid.length} | 
-                ملخصات: {currentSheet.validation.summaries.length}
+               {(() => {
+                 const sheetForPeriod = data.sheets[data.periods[periodIdx]?.sheetIndex];
+                 if (sheetForPeriod) {
+                   return `تم استيراد: ${sheetForPeriod.rows.length} صف | صحيح: ${sheetForPeriod.validation.valid.length} | ملخصات: ${sheetForPeriod.validation.summaries.length}`;
+                 }
+                 return 'بيانات غير متاحة';
+               })()}
              </div>
              {data.periods.length > 1 && (
                <select value={periodIdx} onChange={e => setPeriodIdx(parseInt(e.target.value))}>
@@ -88,7 +90,7 @@ export default function App() {
              )}
           </div>
 
-          <Report metrics={current} />
+          <Report metrics={current} sheetName={data.periods[periodIdx]?.name} />
           <Charts metrics={current} allPeriods={data.periods} />
         </div>
       )}

@@ -15,23 +15,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-@media print {
-  @page {
-    size: A4;
-    margin: 12mm;
-  }
-  .no-print {
-    display: none !important;
-  }
-  .page-break {
-    page-break-before: always;
-    break-before: page;
-  }
-  table {
-    page-break-inside: auto;
-  }
-  tr {
-    page-break-inside: avoid;
-  }
-}
