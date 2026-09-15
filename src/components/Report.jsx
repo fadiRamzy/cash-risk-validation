@@ -13,9 +13,9 @@ export default function Report({ metrics, sheetName }) {
       'نسبة المتأخرات PAR %': b.parPct,
       'نسبة التحصيل %': b.collectionPct,
       'عدد العملاء': b.clients,
-      'درجة المخاطر': b.riskLevel,
+      'درجة المخاطرة': b.riskLevel,
       'حجم التأثير المالي': b.impact === 'High' ? 'مرتفع الأثر' : 'اعتيادي',
-      'استثناء سياسة': b.policyException ? 'مخالف للمستهدف' : 'مطابق'
+      'استثناء سياسات': b.policyException ? 'مخالف للمستهدف' : 'مطابق'
     }));
 
     const ws = XLSX.utils.json_to_sheet(dataRows);
@@ -38,7 +38,7 @@ export default function Report({ metrics, sheetName }) {
     <div className="bg-white p-10 shadow-xl max-w-4xl mx-auto rtl-report" dir="rtl">
       <header className="border-b-4 border-blue-900 pb-4 mb-8">
         <h1 className="text-3xl font-bold">تقرير تحليل وتحوط مخاطر الائتمان</h1>
-        <p className="text-gray-500 italic">تم إنشاء التقرير في: {new Date().toLocaleDateString('ar-EG')}</p>
+        <p className="text-gray-500 italic">تم استخراج التقرير في: {new Date().toLocaleDateString('ar-EG')}</p>
       </header>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
@@ -74,7 +74,7 @@ export default function Report({ metrics, sheetName }) {
       </div>
 
       <div className="page-break mt-10">
-        <h3 className="text-lg font-bold text-emerald-800 text-right pb-2 border-b mb-4">ملحق رقم (١): جدول تقييم الفروع الشامل</h3>
+        <h3 className="text-lg font-bold text-emerald-800 text-right pb-2 border-b mb-4">ملحق رقم (١): جدول تقييم ومؤشرات الفروع الشامل</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-right border-collapse text-xs">
             <thead>
