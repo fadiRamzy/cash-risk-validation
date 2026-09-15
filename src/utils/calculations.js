@@ -1,5 +1,6 @@
 import { evaluateRisk } from './riskEngine.js';
 import { normalizeText } from './columnMap.js';
+import { parseFormattedNumber } from './validator.js';
 
 export function computeMetrics(validation, colMap) {
   const processed = validation.valid.map(evaluateRisk);
@@ -15,8 +16,8 @@ export function computeMetrics(validation, colMap) {
   let portfolioCollection = null;
   let isWeighted = false;
   if (colMap.collection !== undefined && colMap.target !== undefined) {
-    const tColl = processed.reduce((s, r) => s + (parseFloat(r.data[colMap.collection]) || 0), 0);
-    const tTarget = processed.reduce((s, r) => s + (parseFloat(r.data[colMap.target]) || 0), 0);
+    const tColl = processed.reduce((s, r) => s + (parseFormattedNumber(r.data[colMap.collection]) || 0), 0);
+    const tTarget = processed.reduce((s, r) => s + (parseFormattedNumber(r.data[colMap.target]) || 0), 0);
     if (tTarget > 0) {
       portfolioCollection = (tColl / tTarget) * 100;
       isWeighted = true;
@@ -33,7 +34,7 @@ export function computeMetrics(validation, colMap) {
     processed.forEach(r => {
       Object.keys(agingTotals).forEach(k => {
         const idx = colMap.aging[k];
-        if (idx !== undefined) agingTotals[k] += (parseFloat(r.data[idx]) || 0);
+        if (idx !== undefined) agingTotals[k] += (parseFormattedNumber(r.data[idx]) || 0);
       });
     });
   }
